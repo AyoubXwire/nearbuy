@@ -1,0 +1,25 @@
+{
+  "name": "nearbuy",
+  "version": "1.0.0",
+  "description": "a web app that displays all the shops near you",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AyoubXwire/nearbuy.git"
+  },
+  "author": "ayoub benabid",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AyoubXwire/nearbuy/issues"
+  },
+  "homepage": "https://github.com/AyoubXwire/nearbuy#readme",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "mongodb": "^3.1.13",
+    "mongoose": "^5.4.8"
+  }
+}
