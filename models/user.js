@@ -5,14 +5,16 @@ const UserSchema = new schema({
     username: {
         type: String,
         unique: true,
-        required: true
+        required: [true, 'cannot be blank'],
+        match: [/^[a-zA-Z0-9]+$/, 'is invalid']
     },
     email: {
         type: String,
         unique: true,
         trim: true,
         lowercase: true,
-        required: true
+        required: [true, 'cannot be blank'],
+        match: [/\S+@\S+\.\S+/, 'is invalid']
     },
     liked: [
         {
