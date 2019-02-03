@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/nearby', (req, res) => {
+const {ensureAuth} = require('../helpers/auth');
+
+router.get('/nearby', ensureAuth, (req, res) => {
     res.render('nearby');
 });
 
-router.get('/preferred', (req, res) => {
+router.get('/preferred', ensureAuth, (req, res) => {
     res.render('preferred');
 });
 
