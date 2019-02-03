@@ -1,20 +1,19 @@
 const mongoose = require('mongoose');
+const passportLocalMongoose = require('passport-local-mongoose');
 const schema = mongoose.Schema;
 
 const UserSchema = new schema({
     username: {
         type: String,
         unique: true,
-        required: [true, 'cannot be blank'],
-        match: [/^[a-zA-Z0-9]+$/, 'is invalid']
+        required: [true, 'cannot be blank']
     },
     email: {
         type: String,
         unique: true,
         trim: true,
         lowercase: true,
-        required: [true, 'cannot be blank'],
-        match: [/\S+@\S+\.\S+/, 'is invalid']
+        required: [true, 'cannot be blank']
     },
     liked: [
         {
@@ -31,6 +30,8 @@ const UserSchema = new schema({
     hash: String,
     salt: String
 });
+
+UserSchema.plugin(passportLocalMongoose, {usernameField: 'username'});
 
 const User = mongoose.model('User', UserSchema);
 

@@ -19,7 +19,10 @@
   "dependencies": {
     "ejs": "^2.6.1",
     "express": "^4.16.4",
+    "express-session": "^1.15.6",
     "mongodb": "^3.1.13",
-    "mongoose": "^5.4.8"
+    "mongoose": "^5.4.8",
+    "passport": "^0.4.0",
+    "passport-local-mongoose": "^5.0.1"
   }
 }

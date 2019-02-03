@@ -1,5 +1,12 @@
 const express = require('express');
+const passport = require('passport');
 const router = express.Router();
+
+const User = require('../models/user');
+
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 router.get('/register', (req, res) => {
     res.render('register');
@@ -16,13 +23,42 @@ router.post('/register', (req, res) => {
     // Handle the form
     if(errors.length > 0) {
         console.log(errors);
+        res.render('register');
     } else {
-        console.log('Registered');
+        // Create the user
+        const newUser = new User({
+            username: req.body.username,
+            email: req.body.email
+        });
+        User.register(newUser, req.body.password, (err, user) => {
+            if(err) {
+                console.log(err.message);
+                return res.redirect('/users/register');
+            }
+            passport.authenticate('local')(req, res, () => {
+                res.redirect('/shops/nearby');
+            });
+        });
     }
 });
 
-router.post('/login', (req, res) => {
+router.post('/login', passport.authenticate('local', {
+    successRedirect: '/shops/nearby',
+    failureRedirect: '/'
+}), (req, res) => {
+    User.findOne({username: req.body.username}, (err, user) => {
+        if(user === undefined || user.password !== req.body.password) {
+            res.redirect('/')
+        }
+        else {
+            res.redirect('/shops/nearby');
+        }
+    });
+});
 
+router.get('/logout', (req, res) => {
+    req.logOut();
+    res.redirect('/')
 });
 
 function validateForm(username, email, password, password2) {
