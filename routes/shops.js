@@ -5,6 +5,8 @@ const {ensureAuth} = require('../helpers/auth');
 
 const Shop = require('../models/shop');
 
+// TODO: Implement pagination
+// TODO: Exclude liked and disliked shops
 router.get('/nearby', ensureAuth, (req, res) => {
     Shop.find({}, (err, shops) => {
         if(err) {
@@ -17,9 +19,18 @@ router.get('/nearby', ensureAuth, (req, res) => {
 });
 
 router.get('/preferred', ensureAuth, (req, res) => {
-    res.render('preferred');
+    Shop.find({ _id: { $in: req.user.liked }}, (err, shops) => {
+        if(err) {
+            console.log(err);
+        }
+        else {
+            res.render('preferred', {shops: shops});
+        }
+    });
 });
 
+// TODO: Add flash messages
+// TODO: Should these routes be PUT requests? 
 router.get('/:shop/like', ensureAuth, (req, res) => {
     req.user.like(req.params.shop);
     res.redirect('/shops/nearby');
@@ -32,7 +43,7 @@ router.get('/:shop/dislike', ensureAuth, (req, res) => {
 
 router.get('/:shop/remove', ensureAuth, (req, res) => {
     req.user.removeLiked(req.params.shop);
-    res.redirect('/shops/nearby');
+    res.redirect('/shops/preferred');
 });
 
 module.exports = router;
