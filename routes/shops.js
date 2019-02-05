@@ -6,9 +6,13 @@ const {ensureAuth} = require('../helpers/auth');
 const Shop = require('../models/shop');
 
 // TODO: Implement pagination
-// TODO: Exclude liked and disliked shops
+// TODO: Sort shops by distance
 router.get('/nearby', ensureAuth, (req, res) => {
-    Shop.find({}, (err, shops) => {
+    const query = { $and: [
+        { _id: { $nin: req.user.liked }},
+        { _id: { $nin: req.user.disliked }}
+    ]};
+    Shop.find(query , (err, shops) => {
         if(err) {
             console.log(err);
         }
