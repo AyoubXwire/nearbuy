@@ -12,25 +12,18 @@ router.get('/nearby', ensureAuth, (req, res) => {
         { _id: { $nin: req.user.liked }},
         { _id: { $nin: req.user.disliked }}
     ]};
-    Shop.find(query , (err, shops) => {
-        if(err) {
-            console.log(err);
-        }
-        else {
-            res.render('nearby', {shops: shops});
-        }
-    });
+
+    Shop.find(query)
+        .then(shops => res.render('nearby', {shops: shops}))
+        .catch(err => console.log(err));
 });
 
 router.get('/preferred', ensureAuth, (req, res) => {
-    Shop.find({ _id: { $in: req.user.liked }}, (err, shops) => {
-        if(err) {
-            console.log(err);
-        }
-        else {
-            res.render('preferred', {shops: shops});
-        }
-    });
+    const query = { _id: { $in: req.user.liked }};
+
+    Shop.find(query)
+        .then(shops => res.render('preferred', {shops: shops}))
+        .catch(err => console.log(err));
 });
 
 // TODO: Add flash messages

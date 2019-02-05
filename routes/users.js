@@ -46,14 +46,16 @@ router.post('/login', passport.authenticate('local', {
     successRedirect: '/shops/nearby',
     failureRedirect: '/'
 }), (req, res) => {
-    User.findOne({username: req.body.username}, (err, user) => {
-        if(user === undefined || user.password !== req.body.password) {
-            res.redirect('/')
-        }
-        else {
-            res.redirect('/shops/nearby');
-        }
-    });
+    User.findOne({username: req.body.username})
+        .then(user => {
+            if(user === undefined || user.password !== req.body.password) {
+                res.redirect('/')
+            }
+            else {
+                res.redirect('/shops/nearby');
+            }
+        })
+        .catch(err => console.log(err));
 });
 
 router.get('/logout', (req, res) => {
