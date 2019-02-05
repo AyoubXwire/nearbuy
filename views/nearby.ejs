@@ -1,13 +1,14 @@
 <% include ./partials/header %>
+<% include ./partials/navbar %>
 
 <div class="container d-flex flex-wrap justify-content-start">
     <% shops.forEach(function(shop) { %>
-        <div class="card border-primary mx-auto m-4" style="width: 14rem;">
+        <div class="card border-dark mx-auto m-4" style="width: 14rem;">
             <h4 class="card-title text-center mt-1"><%= shop.name %></h4>
             <img src="<%= shop.picture %>" class="card-img-top" alt="shop image">
             <div class="card-body">
-                <a href="/shops/<%= shop.id %>/like" class="btn btn-sm btn-success">Like</a>
-                <a href="/shops/<%= shop.id %>/dislike" class="btn btn-sm btn-danger float-right">Dislike</a>
+                <a href="/shops/<%= shop.id %>/like" class="btn btn-sm btn-success border-dark">Like</a>
+                <a href="/shops/<%= shop.id %>/dislike" class="btn btn-sm btn-danger border-dark float-right">Dislike</a>
             </div>
         </div>
     <% }); %>

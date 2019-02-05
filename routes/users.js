@@ -41,7 +41,7 @@ router.post('/register', (req, res) => {
     const { username, email, password, password2 } = req.body;
     validateForm(username, email, password, password2)
         .then((validUser) => {
-            User.register(validUser, req.body.password, (err, user) => {
+            User.register(validUser, password, (err, user) => {
                 if(err) {
                     console.log(err.message);
                     return res.redirect('/users/register');
