@@ -1,6 +1,10 @@
 <% include ./partials/header %>
 <% include ./partials/navbar %>
 
+<div class="container mt-4">
+    <% include ./partials/flash %>
+</div>
+
 <div class="container d-flex flex-wrap justify-content-start">
     <% shops.forEach(function(shop) { %>
         <div class="card border-dark mx-auto m-4" style="width: 14rem;">

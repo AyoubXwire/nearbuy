@@ -8,19 +8,16 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-router.get('/register', (req, res) => {
-    res.render('register');
-});
-
 router.get('/login', (req, res) => {
     res.render('login');
 });
 
 router.post('/login', passport.authenticate('local', {
     successRedirect: '/shops/nearby',
-    failureRedirect: '/'
+    failureRedirect: '/users/login',
+    failureFlash: true
 }), (req, res) => {
-    User.findOne({username: req.body.username})
+    User.findOne({ username: req.body.username })
     .then(user => {
         if(user === undefined || user.password !== req.body.password) {
             res.redirect('/')
@@ -34,58 +31,56 @@ router.post('/login', passport.authenticate('local', {
 
 router.get('/logout', (req, res) => {
     req.logOut();
-    res.redirect('/')
+    res.redirect('/users/login')
+});
+
+router.get('/register', (req, res) => {
+    res.render('register');
 });
 
 router.post('/register', (req, res) => {
-    const { username, email, password, password2 } = req.body;
-    validateForm(username, email, password, password2)
-        .then((validUser) => {
-            User.register(validUser, password, (err, user) => {
-                if(err) {
-                    console.log(err.message);
-                    return res.redirect('/users/register');
-                }
-                passport.authenticate('local')(req, res, () => {
-                    res.redirect('/shops/nearby');
-                });
+    validateForm(req.body)
+    .then((validUser) => {
+        User.register(validUser, req.body.password, (err, user) => {
+            if(err) {
+                req.flash('error', err.message);
+                return res.redirect('/users/register');
+            }
+            passport.authenticate('local')(req, res, () => {
+                res.redirect('/shops/nearby');
             });
-        })
-        .catch(errors => {
-            console.log(errors);
-            res.render('register');
         });
+    })
+    .catch(error => {
+        req.flash('error', errorMessage);
+        res.redirect('/users/register');
+    });
 });
 
-// Make sure the form is valid and return an array of errors if any
-function validateForm(username, email, password, password2) {
+// Make sure the form is valid and return the error message if any
+function validateForm({ username, email, password, password2 }) {
     return new Promise((resolve, reject) => {
-        let errors = [];
-    
         // Check required fields
         if(!username || !email || !password || !password2) {
-            errors.push('Please fill in all fields');
+            reject('Please fill in all fields');
         }
     
         // Check password strength
         if(/^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/.test(password) == false){
-            errors.push('Password shouldt be at least 8 characters long and contains uppercase, lowercase, number and a symbol');
+            reject('Password should be at least 8 characters long and contains uppercase, lowercase, number and a symbol');
         }
     
         // Check passwords match
         if(password !== password2) {
-            errors.push('Passwords do not match');
+            reject('Passwords do not match');
         }
-    
-        if(errors.length > 0) {
-            reject(errors);
-        } else {
-            const validUser = new User({
-                username: username,
-                email: email
-            });
-            resolve(validUser);
-        }
+        
+        // If the form is valid
+        const validUser = new User({
+            username: username,
+            email: email
+        });
+        resolve(validUser);
     });
 }
 
