@@ -6,7 +6,7 @@
 </div>
 
 <div class="container d-flex flex-wrap justify-content-start">
-    <% shops.forEach(function(shop) { %>
+    <% data.docs.forEach(function(shop) { %>
         <div class="card border-dark mx-auto m-4" style="width: 14rem;">
             <h4 class="card-title text-center mt-1"><%= shop.name %></h4>
             <img src="<%= shop.picture %>" class="card-img-top" alt="shop image">
@@ -18,4 +18,5 @@
     <% }); %>
 </div>
 
+<% include ./partials/pagination %>
 <% include ./partials/footer %>

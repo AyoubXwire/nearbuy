@@ -5,16 +5,16 @@ const {ensureAuth} = require('../helpers/auth');
 
 const Shop = require('../models/shop');
 
-// TODO: Implement pagination
 // TODO: Sort shops by distance
 router.get('/nearby', ensureAuth, (req, res) => {
     const query = { $and: [
         { _id: { $nin: req.user.liked }},
         { _id: { $nin: req.user.disliked }}
     ]};
+    const paginate = { page: req.query.page || 1, limit: 24 };
 
-    Shop.find(query)
-    .then(shops => res.render('nearby', {shops: shops}))
+    Shop.paginate(query, paginate)
+    .then(result => res.render('nearby', {data: result}))
     .catch(err => console.log(err));
 });
 
@@ -31,13 +31,13 @@ router.get('/preferred', ensureAuth, (req, res) => {
 router.get('/:shop/like', ensureAuth, (req, res) => {
     req.user.like(req.params.shop);
     req.flash('success', 'Added to preferred shops');
-    res.redirect('/shops/nearby');
+    res.redirect('/shops/nearby?page=1');
 });
 
 router.get('/:shop/dislike', ensureAuth, (req, res) => {
     req.user.dislike(req.params.shop);
     req.flash('success', 'Added to disliked shops, it will be shown back again within nearby shops in two hours');
-    res.redirect('/shops/nearby');
+    res.redirect('/shops/nearby?page=1');
 });
 
 router.get('/:shop/remove', ensureAuth, (req, res) => {

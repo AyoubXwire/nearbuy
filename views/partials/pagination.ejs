@@ -1,0 +1,15 @@
+<div class="container mb-4 text-center">
+    <div class="btn-group w-50" role="group" aria-label="Basic example">
+        <% if(data.hasPrevPage) { %>
+            <a href="/shops/nearby?page=<%= data.prevPage %>" class="w-50 btn btn-sm btn-outline-dark">Previous</a>
+        <% } else { %>
+            <a href="/shops/nearby?page=<%= data.prevPage %>" class="w-50 btn btn-sm btn-outline-dark disabled">Previous</a>
+        <% } %>
+        
+        <% if(data.hasNextPage) { %>
+            <a href="/shops/nearby?page=<%= data.nextPage %>" class="w-50 btn btn-sm btn-outline-dark">Next</a>
+        <% } else { %>
+            <a href="/shops/nearby?page=<%= data.nextPage %>" class="w-50 btn btn-sm btn-outline-dark disabled">Next</a>
+        <% } %>
+    </div>
+</div>

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const schema = mongoose.Schema;
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const ShopSchema = new schema({
     picture: String,
@@ -11,6 +12,8 @@ const ShopSchema = new schema({
         coordinates: [Number, Number]
     }
 });
+
+ShopSchema.plugin(mongoosePaginate);
 
 const Shop = mongoose.model('Shop', ShopSchema);
 

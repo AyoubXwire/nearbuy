@@ -13,7 +13,7 @@ router.get('/login', (req, res) => {
 });
 
 router.post('/login', passport.authenticate('local', {
-    successRedirect: '/shops/nearby',
+    successRedirect: '/shops/nearby?page=1',
     failureRedirect: '/users/login',
     failureFlash: true
 }), (req, res) => {
@@ -23,7 +23,7 @@ router.post('/login', passport.authenticate('local', {
             res.redirect('/')
         }
         else {
-            res.redirect('/shops/nearby');
+            res.redirect('/shops/nearby?page=1');
         }
     })
     .catch(err => console.log(err));
@@ -47,7 +47,7 @@ router.post('/register', (req, res) => {
                 return res.redirect('/users/register');
             }
             passport.authenticate('local')(req, res, () => {
-                res.redirect('/shops/nearby');
+                res.redirect('/shops/nearby?page=1');
             });
         });
     })
