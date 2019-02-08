@@ -3,12 +3,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 const flash = require('connect-flash');
 
 const app = express();
 
 // Set environment variables
 const keys = require('./config/keys');
+let store;
 
 // Connect to database
 mongoose.connect(keys.mongoURI, {
@@ -24,11 +26,24 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(flash());
 
+// Set session store
+if(process.env.NODE_ENV === 'production') {
+    store = new MongoDBStore({
+        uri: keys.mongoURI,
+        databaseName: 'nearbuy',
+        collection: 'sessions'
+    });
+} else {
+    store = new session.MemoryStore();
+}
+
 // Passport
-app.use(session( {
+app.use(session({
     secret: keys.secret,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store: store,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 } // One day
 }));
 
 app.use(passport.initialize());
