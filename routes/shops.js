@@ -27,7 +27,7 @@ router.get('/preferred', ensureAuth, (req, res) => {
 });
 
 // TODO: Should these routes be PUT requests?
-// Flash messages should maybe display the shop's name
+// TODO: Flash messages should maybe display the shop's name?
 router.get('/:shop/like', ensureAuth, (req, res) => {
     req.user.like(req.params.shop);
     req.flash('success', 'Added to preferred shops');

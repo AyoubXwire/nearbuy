@@ -52,7 +52,7 @@ router.post('/register', (req, res) => {
         });
     })
     .catch(error => {
-        req.flash('error', errorMessage);
+        req.flash('error', error);
         res.redirect('/users/register');
     });
 });

@@ -8,10 +8,10 @@ const flash = require('connect-flash');
 const app = express();
 
 // Set environment variables
-const envir = require('./config/envir');
+const keys = require('./config/keys');
 
 // Connect to database
-mongoose.connect(envir.db, {
+mongoose.connect(keys.mongoURI, {
     useNewUrlParser: true,
     useCreateIndex: true
 });
@@ -26,7 +26,7 @@ app.use(flash());
 
 // Passport
 app.use(session( {
-    secret: 'cosmic secret',
+    secret: keys.secret,
     resave: false,
     saveUninitialized: false
 }));
@@ -47,6 +47,6 @@ app.use('/users', require('./routes/users'));
 app.use('/shops', require('./routes/shops'));
 
 // Listener
-app.listen(envir.port, () => {
-    console.log(`listening on port ${envir.port}`);
+app.listen(keys.port, () => {
+    console.log(`listening on port ${keys.port}`);
 });
