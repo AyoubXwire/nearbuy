@@ -1,0 +1,39 @@
+body { 
+    background-image: url(/images/background.jpg) ;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.jumbotron {
+    background-color: #ffffff88;
+}
+
+.navbar {
+    background-color: #ffffff;
+}
+
+.card {
+    background-color: #ffffffdd;
+}
+
+.btn-light {
+    background-color: #ffffffaa;
+}
+
+.btn-dark {
+    background-color: #000000aa;
+}
+
+.btn-success {
+    background-color: #0b700baa;
+}
+
+.btn-danger {
+    background-color: #911414aa;
+}
+
+.bg {
+    background-color: #f0f0f0;
+}
