@@ -37,3 +37,10 @@ body {
 .bg {
     background-color: #f0f0f0;
 }
+
+.alert {
+    position: fixed;
+    bottom: 5%;
+    left: 25%;
+    width: 50%;
+}
