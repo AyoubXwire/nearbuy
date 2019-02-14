@@ -42,7 +42,7 @@ body {
     background-color: #f0f0f0;
 }
 
-.alert {
+.alert-float {
     position: fixed;
     bottom: 5%;
     left: 25%;
