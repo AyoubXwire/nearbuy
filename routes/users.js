@@ -2,13 +2,15 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 
+const {ensureNotAuth} = require('../helpers/auth');
+
 const User = require('../models/user');
 
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-router.get('/login', (req, res) => {
+router.get('/login', ensureNotAuth, (req, res) => {
     res.render('login');
 });
 
@@ -34,7 +36,7 @@ router.get('/logout', (req, res) => {
     res.redirect('/users/login')
 });
 
-router.get('/register', (req, res) => {
+router.get('/register', ensureNotAuth, (req, res) => {
     res.render('register');
 });
 
