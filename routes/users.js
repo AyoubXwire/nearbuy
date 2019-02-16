@@ -15,7 +15,7 @@ router.get('/login', ensureNotAuth, (req, res) => {
 });
 
 router.post('/login', passport.authenticate('local', {
-    successRedirect: '/shops/nearby?page=1',
+    successRedirect: '/shops/nearby',
     failureRedirect: '/users/login',
     failureFlash: true
 }), (req, res) => {
@@ -25,7 +25,7 @@ router.post('/login', passport.authenticate('local', {
             res.redirect('/')
         }
         else {
-            res.redirect('/shops/nearby?page=1');
+            res.redirect('/shops/nearby');
         }
     })
     .catch(err => console.log(err));
@@ -49,7 +49,7 @@ router.post('/register', (req, res) => {
                 return res.redirect('/users/register');
             }
             passport.authenticate('local')(req, res, () => {
-                res.redirect('/shops/nearby?page=1');
+                res.redirect('/shops/nearby');
             });
         });
     })
