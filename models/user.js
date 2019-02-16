@@ -66,6 +66,15 @@ UserSchema.methods.dislike = function(shop) {
     }
 }
 
+// Override MongoDB duplicate key errors
+UserSchema.post('save', function(error, doc, next) {
+    if (error.name === 'MongoError' && error.code === 11000) {
+        next(new Error('A user with the given email is already registered'));
+    } else {
+        next(error);
+    }
+});
+
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
