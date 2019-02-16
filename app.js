@@ -61,6 +61,19 @@ app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
 app.use('/shops', require('./routes/shops'));
 
+//  error handler
+if (process.env.NODE_ENV === 'production') {
+    app.use(function (err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', { message: 'oops!', error: 'Something went wrong' });
+    });
+} else {
+    app.use(function (err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', { message: err.message, error: err });
+    });
+}
+
 // Listener
 app.listen(keys.port, () => {
     console.log(`listening on port ${keys.port}`);
