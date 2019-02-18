@@ -8,8 +8,8 @@ const ShopSchema = new schema({
     email: String,
     city: String,
     location: {
-        type: String,
-        coordinates: [Number, Number]
+        type: {type: String},
+        coordinates: [Number]
     }
 });
 

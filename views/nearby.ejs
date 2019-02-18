@@ -2,7 +2,7 @@
 <% include ./partials/navbar %>
 
 <div class="container d-flex flex-wrap justify-content-start bg">
-    <% data.docs.forEach(function(shop) { %>
+    <% data.forEach(function(shop) { %>
         <div class="card border-dark mx-auto m-4 shadow" style="width: 16rem;">
             <h4 class="card-title text-center mt-1"><%= shop.name %></h4>
             <img src="<%= shop.picture %>" class="card-img-top" alt="shop image">

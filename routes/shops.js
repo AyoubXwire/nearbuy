@@ -1,21 +1,53 @@
 const express = require('express');
 const router = express.Router();
+const geolib = require('geolib');
 
 const {ensureAuth} = require('../helpers/auth');
 
 const Shop = require('../models/shop');
 
-// TODO: Sort shops by distance
+// Handle geolocation
+let location;
+
+router.post('/location', ensureAuth, (req, res) => {
+    location = req.body;
+    res.end();
+});
+
 router.get('/nearby', ensureAuth, (req, res) => {
-    const query = { $and: [
+    const query = { 
+    $and: [
         { _id: { $nin: req.user.liked }},
         { _id: { $nin: req.user.disliked }}
     ]};
-    const paginate = { page: req.query.page || 1, limit: 24 };
 
-    Shop.paginate(query, paginate)
-    .then(result => res.render('nearby', {data: result}))
+    Shop.find(query)
+    .then(result => {
+        // sort by distance from user if location provided
+        if(location != null) {
+            result.sort((a, b) => {
+                const a_distance = geolib.getDistance(location, a.location.coordinates);
+                const b_distance = geolib.getDistance(location, b.location.coordinates);
+                if (a_distance < b_distance) {
+                    return -1;
+                }
+                if (a_distance > b_distance) {
+                    return 1;
+                }
+                return 0;
+            });
+        }
+        res.render('nearby', {data: result});
+    })
     .catch(err => console.log(err));
+
+    // const paginate = { page: req.query.page || 1, limit: 24 };
+
+    // Shop.paginate(query, paginate)
+    // .then(result => {
+    //     res.render('nearby', {data: result});
+    // })
+    // .catch(err => console.log(err));
 });
 
 router.get('/preferred', ensureAuth, (req, res) => {
