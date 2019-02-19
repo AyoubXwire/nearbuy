@@ -1,5 +1,5 @@
-<% include ./partials/header %>
-<% include ./partials/navbar %>
+<%- include partials/header %>
+<%- include partials/navbar %>
 
 <div class="container d-flex flex-wrap justify-content-start bg">
     <% data.docs.forEach(function(shop) { %>
@@ -14,6 +14,6 @@
     <% }); %>
 </div>
 
-<% include ./partials/pagination %>
-<% include ./partials/flash-float %>
-<% include ./partials/footer %>
+<%- include partials/pagination %>
+<%- include partials/flash-float %>
+<%- include partials/footer %>
