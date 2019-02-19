@@ -25,29 +25,13 @@ router.get('/nearby', ensureAuth, (req, res) => {
     .then(result => {
         // sort by distance from user if location provided
         if(location != null) {
-            result.sort((a, b) => {
-                const a_distance = geolib.getDistance(location, a.location.coordinates);
-                const b_distance = geolib.getDistance(location, b.location.coordinates);
-                if (a_distance < b_distance) {
-                    return -1;
-                }
-                if (a_distance > b_distance) {
-                    return 1;
-                }
-                return 0;
-            });
+            result.sort(sortByDistance);
         }
-        res.render('nearby', {data: result});
+        // Paginate the results
+        const data = paginate(result, req.query.page || 1, 24);
+        res.render('nearby', {data: data});
     })
     .catch(err => console.log(err));
-
-    // const paginate = { page: req.query.page || 1, limit: 24 };
-
-    // Shop.paginate(query, paginate)
-    // .then(result => {
-    //     res.render('nearby', {data: result});
-    // })
-    // .catch(err => console.log(err));
 });
 
 router.get('/preferred', ensureAuth, (req, res) => {
@@ -77,5 +61,32 @@ router.get('/:shop/remove', ensureAuth, (req, res) => {
     req.flash('success', 'Removed from preffered shops');
     res.redirect('/shops/preferred');
 });
+
+const sortByDistance = (a, b) => {
+    const a_distance = geolib.getDistance(location, a.location.coordinates);
+    const b_distance = geolib.getDistance(location, b.location.coordinates);
+    if (a_distance < b_distance) {
+        return -1;
+    }
+    if (a_distance > b_distance) {
+        return 1;
+    }
+    return 0;
+}
+
+const paginate = (array, pageNumber, pageSize) => {
+    pageNumber--;
+    
+    const totalPages = array.length / pageSize;
+    const docs = array.slice(pageNumber * pageSize, (pageNumber + 1) * pageSize);
+    const currentPage = pageNumber + 1;
+    const size = pageSize;
+    const hasNext = currentPage < totalPages;
+    const hasPrev = currentPage > 1;
+    const nextPage = currentPage + 1;
+    const prevPage = currentPage - 1;
+
+    return data = { docs, totalPages, currentPage, size, hasNext, hasPrev, nextPage, prevPage };
+}
 
 module.exports = router;
