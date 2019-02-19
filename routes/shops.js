@@ -28,8 +28,12 @@ router.get('/nearby', ensureAuth, (req, res) => {
             result.sort(sortByDistance);
         }
         // Paginate the results
-        const data = paginate(result, req.query.page || 1, 24);
-        res.render('nearby', {data: data});
+        const data = paginate(result, req.query.page || 1, 24)
+        .then(data => res.render('nearby', {data: data}))
+        .catch(err => {
+            console.log(err);
+            res.redirect('/shops/nearby');
+        });
     })
     .catch(err => console.log(err));
 });
@@ -75,18 +79,23 @@ const sortByDistance = (a, b) => {
 }
 
 const paginate = (array, pageNumber, pageSize) => {
-    pageNumber--;
-    
-    const totalPages = array.length / pageSize;
-    const docs = array.slice(pageNumber * pageSize, (pageNumber + 1) * pageSize);
-    const currentPage = pageNumber + 1;
-    const size = pageSize;
-    const hasNext = currentPage < totalPages;
-    const hasPrev = currentPage > 1;
-    const nextPage = currentPage + 1;
-    const prevPage = currentPage - 1;
+    return new Promise((resolve, reject) => {
+        pageNumber--;
+        
+        const totalPages = Math.ceil(array.length / pageSize);
+        const docs = array.slice(pageNumber * pageSize, (pageNumber + 1) * pageSize);
+        const currentPage = pageNumber + 1;
+        const size = pageSize;
+        const hasNext = currentPage < totalPages;
+        const hasPrev = currentPage > 1;
+        const nextPage = currentPage + 1;
+        const prevPage = currentPage - 1;
 
-    return data = { docs, totalPages, currentPage, size, hasNext, hasPrev, nextPage, prevPage };
+        if(currentPage < 1 || currentPage > totalPages) {
+            reject('pageNumber out of boundaries');
+        }
+        resolve({ docs, totalPages, currentPage, size, hasNext, hasPrev, nextPage, prevPage });
+    });
 }
 
 module.exports = router;
