@@ -5,6 +5,8 @@ const passport = require('passport');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const flash = require('connect-flash');
+const cookieparser = require('cookie-parser');
+
 
 const app = express();
 
@@ -22,6 +24,7 @@ mongoose.connect(keys.mongoURI, {
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.use(cookieparser());
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(flash());

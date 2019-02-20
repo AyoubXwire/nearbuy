@@ -6,29 +6,26 @@ const {ensureAuth} = require('../helpers/auth');
 
 const Shop = require('../models/shop');
 
-// Handle geolocation
-let location;
-
-router.post('/location', ensureAuth, (req, res) => {
-    location = req.body;
-    res.end();
-});
-
 router.get('/nearby', ensureAuth, (req, res) => {
+    const location = {
+        latitude: req.cookies.latitude,
+        longitude: req.cookies.longitude
+    };
     const query = { 
-    $and: [
-        { _id: { $nin: req.user.liked }},
-        { _id: { $nin: req.user.disliked }}
-    ]};
-
+        $and: [
+            { _id: { $nin: req.user.liked }},
+            { _id: { $nin: req.user.disliked }}
+        ]
+    };
+    
     Shop.find(query)
     .then(result => {
-        // sort by distance from user if location provided
-        if(location != null) {
-            result.sort(sortByDistance);
+        // sort by distance from user if location available in cookies
+        if(location.latitude != null && location.longitude != null) {
+            result.sort(sortByDistance(location));
         }
         // Paginate the results
-        const data = paginate(result, req.query.page || 1, 24)
+        paginate(result, req.query.page || 1, 24)
         .then(data => res.render('nearby', {data: data}))
         .catch(err => {
             console.log(err);
@@ -66,16 +63,18 @@ router.get('/:shop/remove', ensureAuth, (req, res) => {
     res.redirect('/shops/preferred');
 });
 
-const sortByDistance = (a, b) => {
-    const a_distance = geolib.getDistance(location, a.location.coordinates);
-    const b_distance = geolib.getDistance(location, b.location.coordinates);
-    if (a_distance < b_distance) {
-        return -1;
+const sortByDistance = (location) => {
+    return (a, b) => {
+        const a_distance = geolib.getDistance(location, a.location.coordinates);
+        const b_distance = geolib.getDistance(location, b.location.coordinates);
+        if (a_distance < b_distance) {
+            return -1;
+        }
+        if (a_distance > b_distance) {
+            return 1;
+        }
+        return 0;
     }
-    if (a_distance > b_distance) {
-        return 1;
-    }
-    return 0;
 }
 
 const paginate = (array, pageNumber, pageSize) => {
