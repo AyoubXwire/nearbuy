@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 const schema = mongoose.Schema;
 
-// 2 minutes for testing purposes
-const dislikeTimeout = 2 * 60 * 1000;
+const dislikeTimeout = 1000 * 60 * 60 * 2; // 2 hours
 
 const UserSchema = new schema({
     username: {

@@ -28,7 +28,7 @@ router.post('/login', passport.authenticate('local', {
             res.redirect('/shops/nearby');
         }
     })
-    .catch(err => console.log(err));
+    .catch();
 });
 
 router.get('/logout', (req, res) => {

@@ -77,6 +77,4 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Listener
-app.listen(keys.port, () => {
-    console.log(`listening on port ${keys.port}`);
-});
+app.listen(keys.port);

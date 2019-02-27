@@ -27,12 +27,9 @@ router.get('/nearby', ensureAuth, (req, res) => {
         // Paginate the results
         paginate(result, req.query.page || 1, 24)
         .then(data => res.render('nearby', {data: data, url: req.url}))
-        .catch(err => {
-            console.log(err);
-            res.redirect('/shops/nearby');
-        });
+        .catch(() => res.redirect('/shops/nearby'));
     })
-    .catch(err => console.log(err));
+    .catch();
 });
 
 router.get('/preferred', ensureAuth, (req, res) => {
@@ -40,10 +37,9 @@ router.get('/preferred', ensureAuth, (req, res) => {
 
     Shop.find(query)
     .then(data => res.render('preferred', {data: data, url: req.url}))
-    .catch(err => console.log(err));
+    .catch();
 });
 
-// TODO: Flash messages should maybe display the shop's name?
 router.get('/:shop/like', ensureAuth, (req, res) => {
     req.user.like(req.params.shop);
     req.flash('success', 'Added to preferred shops');
@@ -62,7 +58,7 @@ router.get('/:shop/remove', ensureAuth, (req, res) => {
     res.redirect('/shops/preferred');
 });
 
-const sortByDistance = (location) => {
+const sortByDistance = location => {
     return (a, b) => {
         const a_distance = geolib.getDistance(location, a.location.coordinates);
         const b_distance = geolib.getDistance(location, b.location.coordinates);
