@@ -26,7 +26,7 @@ router.get('/nearby', ensureAuth, (req, res) => {
         }
         // Paginate the results
         paginate(result, req.query.page || 1, 24)
-        .then(data => res.render('nearby', {data: data}))
+        .then(data => res.render('nearby', {data: data, url: req.url}))
         .catch(err => {
             console.log(err);
             res.redirect('/shops/nearby');
@@ -39,11 +39,10 @@ router.get('/preferred', ensureAuth, (req, res) => {
     const query = { _id: { $in: req.user.liked }};
 
     Shop.find(query)
-    .then(shops => res.render('preferred', {shops: shops}))
+    .then(data => res.render('preferred', {data: data, url: req.url}))
     .catch(err => console.log(err));
 });
 
-// TODO: Should these routes be PUT requests?
 // TODO: Flash messages should maybe display the shop's name?
 router.get('/:shop/like', ensureAuth, (req, res) => {
     req.user.like(req.params.shop);

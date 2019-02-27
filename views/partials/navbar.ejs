@@ -13,7 +13,9 @@
             <a class="nav-link" href="/shops/preferred"><strong>preferred</strong></a>
         </li>
         </ul>
-        <button class="btn btn-info my-2 my-sm-0 mr-4" onclick="getLocation()">Use my current location</button>
+        <% if(url === '/nearby') { %>
+            <button id="location-button" class="btn btn-info my-2 my-sm-0 mr-4" onclick="getLocation()">Use my current location</button>
+        <% } %>
         <a class="btn btn-danger my-2 my-sm-0" href="/users/logout">Logout</a>
     </div>
 </nav>
