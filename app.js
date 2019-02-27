@@ -7,7 +7,6 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const flash = require('connect-flash');
 const cookieparser = require('cookie-parser');
 
-
 const app = express();
 
 // Set environment variables
