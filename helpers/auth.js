@@ -1,15 +1,15 @@
 module.exports = {
-    ensureAuth: function(req, res, next) {
+    ensureAuth: (req, res, next) => {
         if(req.isAuthenticated()) {
-            return next();
+            return next()
         }
-        req.flash('error', 'Please login first');
-        res.redirect('/users/login');
+        req.flash('error', 'Please login first')
+        res.redirect('/users/login')
     },
-    ensureNotAuth: function(req, res, next) {
+    ensureNotAuth: (req, res, next) => {
         if(!req.isAuthenticated()) {
-            return next();
+            return next()
         }
-        res.redirect('/shops/nearby');
+        res.redirect('/shops/nearby')
     }
 }

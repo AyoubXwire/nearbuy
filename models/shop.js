@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const schema = mongoose.Schema
 
 const ShopSchema = new schema({
     picture: String,
@@ -10,8 +10,8 @@ const ShopSchema = new schema({
         type: {type: String},
         coordinates: [Number]
     }
-});
+})
 
-const Shop = mongoose.model('Shop', ShopSchema);
+const Shop = mongoose.model('Shop', ShopSchema)
 
-module.exports = Shop;
+module.exports = Shop
